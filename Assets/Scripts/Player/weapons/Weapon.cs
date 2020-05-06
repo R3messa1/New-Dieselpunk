@@ -20,7 +20,7 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-<<<<<<< HEAD
+
        if (Input.GetButton("Fire1"))
         {
             Shoot();
@@ -34,21 +34,20 @@ public class Weapon : MonoBehaviour
             SoundManager.sndMan.PlayGunSound();
 
         }
-=======
+
        if (Input.GetButtonDown("Fire1"))
         { 
             Shoot();          
         } 
->>>>>>> a9878a1f2ad346eb1aa671a147ecfba36e882f04
+
     }
 
 private void Shoot()
     {
 
-<<<<<<< HEAD
+
         sound();
-=======
->>>>>>> a9878a1f2ad346eb1aa671a147ecfba36e882f04
+
         RaycastHit hit;
         if (Physics.Raycast(FPCamera.transform.position, FPCamera.transform.forward, out hit, range, ignoreLayer))
         {

@@ -210,18 +210,18 @@ public class Player : MonoBehaviour
             Rigidbody rB = nearbyObject.GetComponent<Rigidbody>();
             if (rB != null)
             {
-<<<<<<< HEAD
-
-                rB.AddForce(Camera.main.transform.forward * 7);
 
 
                 rB.AddForce(Camera.main.transform.forward * 7);
 
-=======
+
+                rB.AddForce(Camera.main.transform.forward * 7);
+
+
     
                 rB.AddForce(Camera.main.transform.forward * 7);
                 rB.AddForce(Camera.main.transform.forward * 7);
->>>>>>> a9878a1f2ad346eb1aa671a147ecfba36e882f04
+
                 _controller.transform.position = transform.position;
             }
         }

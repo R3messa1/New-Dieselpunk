@@ -86,6 +86,7 @@ public class EnemyHealth : MonoBehaviour
         anim.SetTrigger("Dead");
         KillCounter.instance.EnemyKilled();
         Instantiate(_gibPrefab, transform.position, _gibPrefab.transform.rotation);
+        Destroy(this.gameObject);
         // Change the audio clip of the audio source to the death clip and play it (this will stop the hurt clip playing).
      //   enemyAudio.clip = deathClip;
      //   enemyAudio.Play();

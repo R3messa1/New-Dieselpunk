@@ -107,8 +107,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("CURRENT FUEL: " + _fuelTank + " ANd health = " + _health);
-
+        //Debug.Log("CURRENT FUEL: " + _fuelTank + " ANd health = " + _health);
+        FuelUI.instance.UpdateFuel((int)_fuelTank, (int)_maxFuel);
         //shoot
         if (Input.GetMouseButton(0))
         {

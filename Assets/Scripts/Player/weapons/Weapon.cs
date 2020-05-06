@@ -26,6 +26,7 @@ public class Weapon : MonoBehaviour
 
     private void Shoot()
     {
+
         RaycastHit hit;
         if (Physics.Raycast(FPCamera.transform.position, FPCamera.transform.forward, out hit, range, ignoreLayer))
         {

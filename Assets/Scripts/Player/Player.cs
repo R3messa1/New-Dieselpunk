@@ -40,6 +40,7 @@ public class Player : MonoBehaviour
     private float _fuelTank;
     [SerializeField]
     private float _fuelRechargeRate = 10f;
+
     [SerializeField]
     private float _fuelRechargeDelay = 3f;
     [SerializeField]
@@ -198,7 +199,14 @@ public class Player : MonoBehaviour
             Rigidbody rB = nearbyObject.GetComponent<Rigidbody>();
             if (rB != null)
             {
+<<<<<<< HEAD
+
+                rB.AddForce();
                 rB.AddForce(Camera.main.transform.forward * 7);
+
+=======
+                rB.AddForce(Camera.main.transform.forward * 7);
+>>>>>>> 27aa2f8f6d54ab3ecf4360bf6f4eedc35976bc1d
                 _controller.transform.position = transform.position;
             }
         }
@@ -325,9 +333,12 @@ public class Player : MonoBehaviour
 
         if (velocity.x > 0 || velocity.z > 0)
         {
-
+            bool isWalkingPressed = Input.GetKey("w");
+            _animator.SetBool("Iswalking", isWalkingPressed);
         }
-    }
+
+         
+   }
 
     void FuelCheck()
     {

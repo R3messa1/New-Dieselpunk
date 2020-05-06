@@ -117,6 +117,9 @@ public class Player : MonoBehaviour
             Ray rayOrigin = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
             RaycastHit hitInfo;
 
+            bool isShootingPressed = true;
+            _animator.SetBool("isshooting", isShootingPressed);
+
             if (Physics.Raycast(rayOrigin, out hitInfo))
             {
 
@@ -125,17 +128,25 @@ public class Player : MonoBehaviour
         else
         {
             _muzzleFlashPrefabLeft.SetActive(false);
+            bool isShootingPressed = false;
+            _animator.SetBool("isshooting", isShootingPressed);
         }
 
         if (Input.GetMouseButton(1))
         {
             _muzzleFlashPrefabRight.SetActive(true);
+
+            bool isShootingPressed = true;
+            _animator.SetBool("isshooting", isShootingPressed);
+
+
         }
         else
         {
             _muzzleFlashPrefabRight.SetActive(false);
+            bool isShootingPressed = false;
+            _animator.SetBool("isshooting", isShootingPressed);
         }
-
         CalculateMovement();
         FuelCheck();
 
@@ -199,14 +210,9 @@ public class Player : MonoBehaviour
             Rigidbody rB = nearbyObject.GetComponent<Rigidbody>();
             if (rB != null)
             {
-<<<<<<< HEAD
-
-                rB.AddForce();
+    
                 rB.AddForce(Camera.main.transform.forward * 7);
-
-=======
                 rB.AddForce(Camera.main.transform.forward * 7);
->>>>>>> 27aa2f8f6d54ab3ecf4360bf6f4eedc35976bc1d
                 _controller.transform.position = transform.position;
             }
         }
@@ -331,9 +337,14 @@ public class Player : MonoBehaviour
 
         _controller.Move(velocity * Time.deltaTime);
 
-        if (velocity.x > 0 || velocity.z > 0)
+        if (Input.GetKey(KeyCode.W))
         {
-            bool isWalkingPressed = Input.GetKey("w");
+            bool isWalkingPressed = true;
+            _animator.SetBool("Iswalking", isWalkingPressed);
+        }
+        else
+        {
+            bool isWalkingPressed = false;
             _animator.SetBool("Iswalking", isWalkingPressed);
         }
 

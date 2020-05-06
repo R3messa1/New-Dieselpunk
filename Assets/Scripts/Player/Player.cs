@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -24,7 +25,7 @@ public class Player : MonoBehaviour
     private float _verticalJetSpeed = 3f;
     [SerializeField]
     private int _inAirJumps = 1;
-    
+
     //dash related vars
     [SerializeField]
     private float _dashDistance = 10f;
@@ -51,6 +52,8 @@ public class Player : MonoBehaviour
     private bool _fuelInUse;
     private bool _canRecharge;
     private float _dJumpBoostDrain = 20f;
+
+    private float InstantiationTimer = 0.069f;
     [SerializeField]
     private float _healRate = 10f;
     [SerializeField]
@@ -59,12 +62,36 @@ public class Player : MonoBehaviour
     private GameObject _muzzleFlashPrefabLeft;
     [SerializeField]
     private GameObject _muzzleFlashPrefabRight;
+    [SerializeField]
+    private GameObject _slamDirtPrefab;
+    [SerializeField]
+    private GameObject _jetTrailPrefab;
+    [SerializeField]
+    private GameObject _jumpEffect;
+    [SerializeField]
+    private GameObject _guns;
+    [SerializeField]
+    private GameObject _MeleeWeapon;
+    //incredibly poor solution for making tab a toggle
+    private bool _weaponSwitched;
+
+    //Smashstuff :3
+    [SerializeField]
+    private float _slamRadius = 30f;
+    [SerializeField]
+    private float _slamPower = 70f;
+    private bool _slamUsed = false;
+    [SerializeField]
+    private float _slamCooldown = 2f;
 
     // Start is called before the first frame update
     void Start()
     {
         _muzzleFlashPrefabLeft.SetActive(false);
         _muzzleFlashPrefabRight.SetActive(false);
+
+        _MeleeWeapon.SetActive(true);
+        _guns.SetActive(false);
 
         _health = _maxHealth;
         _fuelTank = _maxFuel;
@@ -77,7 +104,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-    //    Debug.Log("CURRENT FUEL: " + _fuelTank + " ANd health = " + _health);
+        Debug.Log("CURRENT FUEL: " + _fuelTank + " ANd health = " + _health);
 
         //shoot
         if (Input.GetMouseButton(0))
@@ -86,11 +113,9 @@ public class Player : MonoBehaviour
             Ray rayOrigin = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
             RaycastHit hitInfo;
 
-            //SoundManager.sndMan.PlayGunSound(); <----Gunsound
-
             if (Physics.Raycast(rayOrigin, out hitInfo))
             {
-                
+
             }
         }
         else
@@ -100,9 +125,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetMouseButton(1))
         {
-            
             _muzzleFlashPrefabRight.SetActive(true);
-
         }
         else
         {
@@ -124,7 +147,7 @@ public class Player : MonoBehaviour
         }
 
         //Fuel recharging
-        if(_canRecharge == true && !_fuelInUse)
+        if (_canRecharge == true && !_fuelInUse)
         {
             _fuelTank += _fuelRechargeRate * Time.deltaTime;
 
@@ -140,10 +163,44 @@ public class Player : MonoBehaviour
             _fuelTank = _maxFuel;
         }
 
-        if(_health <= 0)
+        if (_health <= 0)
         {
             Destroy(this.gameObject);
         }
+
+        if (Input.GetKeyDown(KeyCode.Tab) && _weaponSwitched)
+        {
+            _guns.SetActive(false);
+            _MeleeWeapon.SetActive(true);
+            _weaponSwitched = false;
+        }
+        else if (Input.GetKeyDown(KeyCode.Tab) && !_weaponSwitched)
+        {
+            _MeleeWeapon.SetActive(false);
+            _guns.SetActive(true);
+            _weaponSwitched = true;
+        }
+    }
+
+    void SlamAttack()
+    {
+
+        Instantiate(_slamDirtPrefab, transform.position, _slamDirtPrefab.transform.rotation);
+        Destroy(_slamDirtPrefab.gameObject, 2.5f);
+
+        Collider[] colliders = Physics.OverlapSphere(transform.position, _slamRadius);
+
+        foreach (Collider nearbyObject in colliders)
+        {
+            CharacterController cC = nearbyObject.GetComponent<CharacterController>();
+            if (cC != null)
+            {
+                cC.Move(Vector3.up * _slamPower * Time.deltaTime);
+                _controller.transform.position = transform.position;
+            }
+        }
+
+        StartCoroutine(SlamCooldown());
     }
 
     void CalculateMovement()
@@ -176,31 +233,40 @@ public class Player : MonoBehaviour
         }
         else if (Input.GetButtonDown("Jump"))
         {
-            if(_inAirJumps == 1)
+            if (_inAirJumps == 1)
             {
                 _verticalSpeed = _jumpSpeed + 1;
                 _inAirJumps--;
+                Instantiate(_jumpEffect, transform.position, _jumpEffect.transform.rotation);
             }
-            else if(_fuelAvailable && _inAirJumps == 0)
+            else if (_fuelAvailable && _inAirJumps == 0)
             {
                 if (Input.GetButton("Jump") && _fuelTank > _dJumpBoostDrain)
                 {
                     _verticalSpeed = _jumpSpeed + 1;
                     _fuelTank -= _dJumpBoostDrain;
                     _canRecharge = false;
+                    Instantiate(_jumpEffect, transform.position, _jumpEffect.transform.rotation);
                     StartCoroutine(FuelCooling());
                 }
             }
         }
-        
 
 
         //slamming/groundpound
-        if (_controller.isGrounded == false && Input.GetKey(KeyCode.C))
+        if (Input.GetKey(KeyCode.C) && !_slamUsed)
         {
             Vector3 slamDirection = Camera.main.transform.forward * 2;
             slamDirection += Vector3.down;
             _controller.Move(slamDirection * _crouchSlamSpeed * Time.deltaTime);
+
+            if (_controller.isGrounded)
+            {
+                Debug.Log("SLAM!");
+                SlamAttack();
+                _slamUsed = true;
+                return;
+            }
         }
         else
         {
@@ -233,6 +299,13 @@ public class Player : MonoBehaviour
 
             if (Input.GetKey(KeyCode.LeftShift))
             {
+                InstantiationTimer -= Time.deltaTime;
+                if (InstantiationTimer <= 0)
+                {
+                    Instantiate(_jetTrailPrefab, transform.position, Quaternion.identity);
+                    InstantiationTimer = 0.069f;
+                }
+
                 _canRecharge = false;
                 _fuelTank -= _jetFuelDrainPerSec * Time.deltaTime;
                 if (Time.timeSinceLevelLoad - _jetHoldTime > _minHeldDuration)
@@ -271,6 +344,12 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(_fuelRechargeDelay);
         _canRecharge = true;
+    }
+
+    IEnumerator SlamCooldown()
+    {
+        yield return new WaitForSeconds(_slamCooldown);
+        _slamUsed = false;
     }
 
     public void TakeDamage(float amount)

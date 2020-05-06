@@ -32,6 +32,8 @@ public class SoundManager : MonoBehaviour
 
     }
 
+  
+
     public void PlayWooshSound() // <--- Tätä kutsumalla tää tekee ton wooshsoundin
     {
         randomGunSound = Random.Range(0,1);

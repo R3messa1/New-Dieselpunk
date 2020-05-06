@@ -21,11 +21,22 @@ public class Weapon : MonoBehaviour
        if (Input.GetButton("Fire1"))
         {
             Shoot();
-        } 
+        }
     }
 
-    private void Shoot()
+    void sound()
     {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            SoundManager.sndMan.PlayGunSound();
+
+        }
+    }
+
+private void Shoot()
+    {
+
+        sound();
         RaycastHit hit;
         if (Physics.Raycast(FPCamera.transform.position, FPCamera.transform.forward, out hit, range, ignoreLayer))
         {

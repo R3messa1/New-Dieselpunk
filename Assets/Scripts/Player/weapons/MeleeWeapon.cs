@@ -19,6 +19,8 @@ public class MeleeWeapon : MonoBehaviour
 
     private void Shoot()
     {
+        SoundManager.sndMan.PlayWooshSound();
+
         RaycastHit hit;
         if (Physics.Raycast(FPCamera.transform.position, FPCamera.transform.forward, out hit, range))
         {

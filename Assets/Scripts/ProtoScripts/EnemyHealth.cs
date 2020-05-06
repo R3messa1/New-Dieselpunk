@@ -81,7 +81,7 @@ public class EnemyHealth : MonoBehaviour
         // Turn the collider into a trigger so shots can pass through it.
         capsuleCollider.isTrigger = true;
         EnemyManager.instance.EnemyKilled();
-        StartSinking();
+ 
         // Tell the animator that the enemy is dead.
         anim.SetTrigger("Dead");
         KillCounter.instance.EnemyKilled();
@@ -93,20 +93,6 @@ public class EnemyHealth : MonoBehaviour
     }
 
 
-    public void StartSinking()
-    {
-        // Find and disable the Nav Mesh Agent.
-        GetComponent<NavMeshAgent>().enabled = false;
-
-        // Find the rigidbody component and make it kinematic (since we use Translate to sink the enemy).
-      //  GetComponent<Rigidbody>().isKinematic = true;
-
-        // The enemy should no sink.
-        isSinking = true;
-        
-        // After 2 seconds destory the enemy.
-        Destroy(gameObject, 2f);
-    }
 
 
     public void TakeDamage(int damage)

@@ -84,9 +84,12 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _slamCooldown = 2f;
 
+    public Animator _animator;
+
     // Start is called before the first frame update
     void Start()
     {
+        _animator = this.GetComponent<Animator>();
         _muzzleFlashPrefabLeft.SetActive(false);
         _muzzleFlashPrefabRight.SetActive(false);
 
@@ -195,7 +198,7 @@ public class Player : MonoBehaviour
             Rigidbody rB = nearbyObject.GetComponent<Rigidbody>();
             if (rB != null)
             {
-                rB.AddForce()
+                rB.AddForce(Camera.main.transform.forward * 7);
                 _controller.transform.position = transform.position;
             }
         }

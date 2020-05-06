@@ -195,7 +195,7 @@ public class Player : MonoBehaviour
             Rigidbody rB = nearbyObject.GetComponent<Rigidbody>();
             if (rB != null)
             {
-                rB.AddForce()
+                rB.AddForce();
                 _controller.transform.position = transform.position;
             }
         }

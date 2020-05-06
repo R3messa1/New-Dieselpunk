@@ -19,7 +19,8 @@ public class EnemyHealth : MonoBehaviour
     CapsuleCollider capsuleCollider;            // Reference to the capsule collider.
     bool isDead;                                // Whether the enemy is dead.
     bool isSinking;                             // Whether the enemy has started sinking through the floor.
-
+    [SerializeField]
+    private GameObject _gibPrefab;
 
     void Awake()
     {
@@ -84,9 +85,11 @@ public class EnemyHealth : MonoBehaviour
         // Tell the animator that the enemy is dead.
         anim.SetTrigger("Dead");
         KillCounter.instance.EnemyKilled();
+        Instantiate(_gibPrefab, transform.position, _gibPrefab.transform.rotation);
         // Change the audio clip of the audio source to the death clip and play it (this will stop the hurt clip playing).
      //   enemyAudio.clip = deathClip;
      //   enemyAudio.Play();
+
     }
 
 

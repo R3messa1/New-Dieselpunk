@@ -192,10 +192,10 @@ public class Player : MonoBehaviour
 
         foreach (Collider nearbyObject in colliders)
         {
-            CharacterController cC = nearbyObject.GetComponent<CharacterController>();
-            if (cC != null)
+            Rigidbody rB = nearbyObject.GetComponent<Rigidbody>();
+            if (rB != null)
             {
-                cC.Move(Vector3.up * _slamPower * Time.deltaTime);
+                rB.AddForce()
                 _controller.transform.position = transform.position;
             }
         }
@@ -319,6 +319,11 @@ public class Player : MonoBehaviour
         velocity.y = _verticalSpeed;
 
         _controller.Move(velocity * Time.deltaTime);
+
+        if (velocity.x > 0 || velocity.z > 0)
+        {
+
+        }
     }
 
     void FuelCheck()

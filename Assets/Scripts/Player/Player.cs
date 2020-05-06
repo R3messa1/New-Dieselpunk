@@ -86,9 +86,11 @@ public class Player : MonoBehaviour
             Ray rayOrigin = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
             RaycastHit hitInfo;
 
+            //SoundManager.sndMan.PlayGunSound(); <----Gunsound
+
             if (Physics.Raycast(rayOrigin, out hitInfo))
             {
-
+                
             }
         }
         else
@@ -98,7 +100,9 @@ public class Player : MonoBehaviour
 
         if (Input.GetMouseButton(1))
         {
+            
             _muzzleFlashPrefabRight.SetActive(true);
+
         }
         else
         {

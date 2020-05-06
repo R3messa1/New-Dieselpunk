@@ -325,9 +325,12 @@ public class Player : MonoBehaviour
 
         if (velocity.x > 0 || velocity.z > 0)
         {
-
+            bool isWalkingPressed = Input.GetKey("w");
+            _animator.SetBool("Iswalking", isWalkingPressed);
         }
-    }
+
+         
+   }
 
     void FuelCheck()
     {

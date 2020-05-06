@@ -9,18 +9,20 @@ public class Weapon : MonoBehaviour
     [SerializeField] int damage = 25;
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] public GameObject Muzzle;
+    public Animator _animator;
 
     private void Start()
     {
         Muzzle.SetActive(false);
+        _animator = this.GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
        if (Input.GetButtonDown("Fire1"))
-        {
-            Shoot();
+        { 
+            Shoot();          
         } 
     }
 
